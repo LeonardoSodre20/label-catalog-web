@@ -11,7 +11,10 @@
     "lint": "biome check --write .",
     "lint:ci": "biome ci .",
     "test": "vitest",
-    "test:run": "vitest run"
+    "test:run": "vitest run",
+    "docker:dev": "docker compose up",
+    "docker:build": "docker compose build",
+    "docker:down": "docker compose down"
   },
   "dependencies": {
     "@hookform/resolvers": "^4",
