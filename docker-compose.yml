@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  frontend:
+    build:
+      context: .
+      target: build
+    container_name: label-catalog-web
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: pnpm dev --host 0.0.0.0
+    environment:
+      - VITE_API_URL=http://localhost:8080
