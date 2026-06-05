@@ -1,9 +1,10 @@
-import type { ReactNode } from 'react'
+import { LoginForm } from './components/login-form'
+import { LoginLayout } from './components/login-layout'
 
-interface AuthModuleProps {
-  children: ReactNode
-}
-
-export function AuthModule({ children }: AuthModuleProps) {
-  return <>{children}</>
+export function AuthModule() {
+  return (
+    <LoginLayout>
+      <LoginForm />
+    </LoginLayout>
+  )
 }

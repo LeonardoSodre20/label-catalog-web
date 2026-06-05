@@ -26,6 +26,7 @@
     "class-variance-authority": "^0",
     "clsx": "^2",
     "lucide-react": "^0",
+    "radix-ui": "^1.4.3",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "react-hook-form": "^7",
@@ -50,9 +51,6 @@
     "vitest": "^3"
   },
   "pnpm": {
-    "onlyBuiltDependencies": [
-      "@biomejs/biome",
-      "esbuild"
-    ]
+    "onlyBuiltDependencies": ["@biomejs/biome", "esbuild"]
   }
 }
