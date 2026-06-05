@@ -13,3 +13,19 @@ export interface User {
   name: string
   email: string
 }
+
+export interface ForgotPasswordRequest {
+  email: string
+}
+
+export interface ResetPinRequest {
+  email: string
+  token: string
+}
+
+export interface ResetPasswordRequest {
+  email: string
+  token: string
+  password: string
+  passwordConfirmation: string
+}

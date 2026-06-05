@@ -1,5 +1,7 @@
 export const AUTH_KEYS = {
   session: ['auth', 'session'] as const,
+  forgotPassword: ['auth', 'forgot-password'] as const,
+  resetPassword: ['auth', 'reset-password'] as const,
 }
 
 export const USERS_KEYS = {
