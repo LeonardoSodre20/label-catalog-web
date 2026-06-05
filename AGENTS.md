@@ -4,6 +4,8 @@
 
 Sistema corporativo SPA para centralização de dados — etiquetas, usuários e análise de custos.
 
+Register: `product` (design SERVES the product — app UI, dashboards, tools).
+
 ## Stack
 
 | Technology | Purpose |
@@ -48,6 +50,11 @@ src/
         └── <name>.module.tsx  # Module wrapper component
 ```
 
+## Skills (in `.opencode/skills/`)
+- `label-catalog-core` — project conventions, stack, workflow
+- `design-tokens-label-catalog` — "The Navy Bridge" design system, tokens, rules
+- `impeccable` — design/redesign/audit commands (`/impeccable`)
+
 ## Code Conventions
 
 ### Module Pattern
@@ -89,8 +96,9 @@ src/
 ### Before Every Commit
 
 1. Run `pnpm lint` — Biome must pass with zero errors
-2. Run `pnpm test:run` — all tests must pass
-3. Write a **semantic commit message** following conventional commits:
+2. Run `pnpm typecheck` — TypeScript must pass with zero errors
+3. Run `pnpm test:run` — all tests must pass
+4. Write a **semantic commit message** following conventional commits:
    - `feat:` — new feature
    - `fix:` — bug fix
    - `chore:` — maintenance, config, deps
@@ -115,4 +123,15 @@ When creating a new module:
 5. Add keys to `src/shared/constants/query-keys.ts`
 6. Create the `<name>.module.tsx` wrapper
 7. Create the `test/` directory
-8. Run `pnpm lint` and `pnpm test:run` before committing
+8. Run `pnpm lint`, `pnpm typecheck`, and `pnpm test:run` before committing
+
+## Context Documentation
+
+Before making changes, read the relevant context files at project root:
+
+| File | When to Read |
+|---|---|
+| `PRODUCT.md` | Altering flows, copy, features — defines product strategy, users, brand voice |
+| `DESIGN.md` | Altering UI, components, styles — defines "The Navy Bridge" design system |
+| `.opencode/skills/label-catalog-core/SKILL.md` | Any task — project conventions and workflow |
+| `.opencode/skills/design-tokens-label-catalog/SKILL.md` | UI/design work — detailed design tokens and rules |
