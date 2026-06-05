@@ -38,6 +38,7 @@
   "devDependencies": {
     "@biomejs/biome": "^1",
     "@tailwindcss/vite": "^4",
+    "@tanstack/react-router-devtools": "^1.167.0",
     "@testing-library/jest-dom": "^6",
     "@testing-library/react": "^16",
     "@types/node": "^25.9.1",
