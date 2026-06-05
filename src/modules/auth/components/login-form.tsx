@@ -27,6 +27,8 @@ export function LoginForm() {
             type='email'
             placeholder='seu@email.com'
             autoComplete='email'
+            autoFocus
+            maxLength={100}
             aria-invalid={!!errors.email}
             {...register('email')}
           />
@@ -44,6 +46,7 @@ export function LoginForm() {
             type='password'
             placeholder='••••••••'
             autoComplete='current-password'
+            maxLength={128}
             aria-invalid={!!errors.password}
             {...register('password')}
           />
