@@ -4,7 +4,13 @@
     "enabled": true
   },
   "files": {
-    "ignore": ["tsconfig*.json", "components.json"]
+    "ignore": [
+      "tsconfig*.json",
+      "components.json",
+      "dist",
+      "node_modules",
+      ".opencode"
+    ]
   },
   "linter": {
     "enabled": true,
