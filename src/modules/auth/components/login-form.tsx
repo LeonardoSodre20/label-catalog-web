@@ -6,10 +6,10 @@ export function LoginForm() {
   return (
     <div className='space-y-6'>
       <div className='space-y-1.5'>
-        <h2 className='text-xl font-semibold text-slate-900'>
+        <h2 className='text-xl font-semibold text-foreground'>
           Acessar sistema
         </h2>
-        <p className='text-sm text-slate-500'>
+        <p className='text-sm text-muted-foreground'>
           Insira suas credenciais para continuar
         </p>
       </div>
@@ -35,10 +35,7 @@ export function LoginForm() {
           />
         </div>
 
-        <Button
-          type='submit'
-          className='w-full cursor-pointer bg-blue-950 text-white hover:bg-blue-900'
-        >
+        <Button type='submit' className='w-full cursor-pointer'>
           Entrar
         </Button>
       </form>
