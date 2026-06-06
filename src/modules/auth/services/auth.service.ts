@@ -4,6 +4,7 @@ import type {
   LoginRequest,
   LoginResponse,
   ResetPasswordRequest,
+  VerifyTokenRequest,
 } from '../types/auth-types'
 
 export class AuthService {
@@ -14,6 +15,10 @@ export class AuthService {
 
   async forgotPassword(data: ForgotPasswordRequest): Promise<void> {
     await http.post('/auth/forgot-password', data)
+  }
+
+  async verifyToken(data: VerifyTokenRequest): Promise<void> {
+    await http.post('/auth/verify-token', data)
   }
 
   async resetPassword(data: ResetPasswordRequest): Promise<void> {

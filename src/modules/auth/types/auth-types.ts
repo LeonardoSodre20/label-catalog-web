@@ -5,13 +5,9 @@ export interface LoginRequest {
 
 export interface LoginResponse {
   token: string
-  user: User
-}
-
-export interface User {
-  id: string
-  name: string
+  type: string
   email: string
+  function: string
 }
 
 export interface ForgotPasswordRequest {
@@ -27,5 +23,14 @@ export interface ResetPasswordRequest {
   email: string
   token: string
   password: string
-  passwordConfirmation: string
+  confirmPassword: string
+}
+
+export interface VerifyTokenRequest {
+  email: string
+  token: string
+}
+
+export interface ApiError {
+  error: string
 }
