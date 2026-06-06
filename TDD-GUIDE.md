@@ -7,16 +7,17 @@ Guia de referência para aplicar Test-Driven Development no projeto.
 ## Diagnóstico Atual
 
 | Recurso | Status |
-|---|---|
+|---|---|---|
 | `vitest` ^3 | Instalado |
 | `@testing-library/react` ^16 | Instalado |
 | `@testing-library/jest-dom` ^6 | Instalado |
+| `@testing-library/user-event` ^14 | Instalado |
 | `jsdom` ^25 | Instalado |
-| Config de ambiente (`jsdom`) | ❌ Falta configurar |
-| Setup file (`jest-dom` matchers) | ❌ Falta criar |
-| Globals (`describe`, `it`, `expect`) | ❌ Falta configurar |
-| Testes escritos | Zero |
-| Pastas `test/` nos módulos | Criadas (vazias) |
+| Config de ambiente (`jsdom`) | ✅ Configurado |
+| Setup file (`jest-dom` matchers) | ✅ Criado |
+| Globals (`describe`, `it`, `expect`) | ✅ Configurado |
+| Testes escritos | 21 (módulo auth) |
+| Pastas `test/` nos módulos | ✅ Populadas (auth)
 
 ---
 
