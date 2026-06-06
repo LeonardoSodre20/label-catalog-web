@@ -40,7 +40,7 @@ export function LoginForm() {
           function: response.function,
         })
         toast.success('Login realizado com sucesso')
-        router.navigate({ to: '/users' })
+        router.navigate({ to: '/dashboard/users' })
       },
     })
   }

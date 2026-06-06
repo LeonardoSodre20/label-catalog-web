@@ -10,6 +10,7 @@ import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 import { AuthModule } from '@/modules/auth/auth.module'
 import { ResetPasswordModule } from '@/modules/auth/reset-password.module'
 import { UsersModule } from '@/modules/users/users.module'
+import { DashboardLayout } from '@/shared/components/dashboard-layout'
 import { AppProvider } from '@/shared/providers/app-provider'
 import { useAuthStore } from '@/shared/stores/auth-store'
 
@@ -34,22 +35,28 @@ const resetPasswordRoute = createRoute({
   component: ResetPasswordModule,
 })
 
-const usersRoute = createRoute({
+const dashboardRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/users',
+  path: '/dashboard',
   beforeLoad: () => {
     const { token } = useAuthStore.getState()
     if (!token) {
       throw redirect({ to: '/' })
     }
   },
+  component: DashboardLayout,
+})
+
+const usersRoute = createRoute({
+  getParentRoute: () => dashboardRoute,
+  path: '/users',
   component: UsersModule,
 })
 
 const routeTree = rootRoute.addChildren([
   authRoute,
   resetPasswordRoute,
-  usersRoute,
+  dashboardRoute.addChildren([usersRoute]),
 ])
 
 const router = createRouter({ routeTree })
