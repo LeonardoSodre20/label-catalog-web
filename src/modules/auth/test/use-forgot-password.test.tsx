@@ -1,17 +1,9 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { renderHook, waitFor } from '@testing-library/react'
-import { useLogin } from '../mutations/use-login'
+import { useForgotPassword } from '../mutations/use-forgot-password'
 import { AuthService } from '../services/auth.service'
-import type { LoginResponse } from '../types/auth-types'
 
 vi.mock('../services/auth.service')
-
-const mockLoginResponse: LoginResponse = {
-  token: 'eyJhbGciOiJIUzI1NiJ9',
-  type: 'Bearer',
-  email: 'leo@test.com',
-  function: 'ADMIN',
-}
 
 function createWrapper() {
   const queryClient = new QueryClient({
@@ -27,39 +19,37 @@ function createWrapper() {
   }
 }
 
-describe('useLogin', () => {
+describe('useForgotPassword', () => {
   beforeEach(() => {
     vi.clearAllMocks()
   })
 
-  it('calls AuthService.login and returns data on success', async () => {
-    vi.mocked(AuthService.prototype.login).mockResolvedValue(mockLoginResponse)
+  it('calls AuthService.forgotPassword on success', async () => {
+    vi.mocked(AuthService.prototype.forgotPassword).mockResolvedValue()
 
-    const { result } = renderHook(() => useLogin(), {
+    const { result } = renderHook(() => useForgotPassword(), {
       wrapper: createWrapper(),
     })
 
-    result.current.mutate({ email: 'leo@test.com', password: '123456' })
+    result.current.mutate({ email: 'leo@test.com' })
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
 
-    expect(result.current.data).toEqual(mockLoginResponse)
-    expect(AuthService.prototype.login).toHaveBeenCalledWith({
+    expect(AuthService.prototype.forgotPassword).toHaveBeenCalledWith({
       email: 'leo@test.com',
-      password: '123456',
     })
   })
 
   it('handles error state', async () => {
-    vi.mocked(AuthService.prototype.login).mockRejectedValue(
-      new Error('Invalid credentials'),
+    vi.mocked(AuthService.prototype.forgotPassword).mockRejectedValue(
+      new Error('Email not found'),
     )
 
-    const { result } = renderHook(() => useLogin(), {
+    const { result } = renderHook(() => useForgotPassword(), {
       wrapper: createWrapper(),
     })
 
-    result.current.mutate({ email: 'leo@test.com', password: '123456' })
+    result.current.mutate({ email: 'notfound@test.com' })
 
     await waitFor(() => expect(result.current.isError).toBe(true))
 
@@ -67,7 +57,7 @@ describe('useLogin', () => {
   })
 
   it('starts in idle state before mutation is called', () => {
-    const { result } = renderHook(() => useLogin(), {
+    const { result } = renderHook(() => useForgotPassword(), {
       wrapper: createWrapper(),
     })
 

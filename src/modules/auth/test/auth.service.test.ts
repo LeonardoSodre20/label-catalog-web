@@ -7,7 +7,9 @@ const service = new AuthService()
 const mockLoginResponse = {
   data: {
     token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9',
-    user: { id: '1', name: 'Leonardo', email: 'leo@test.com' },
+    type: 'Bearer',
+    email: 'leo@test.com',
+    function: 'ADMIN',
   },
 }
 
@@ -16,7 +18,7 @@ describe('AuthService', () => {
     vi.clearAllMocks()
   })
 
-  it('calls POST /auth/login with correct data and returns token and user', async () => {
+  it('calls POST /auth/login with correct data and returns token', async () => {
     vi.mocked(http.post).mockResolvedValue(mockLoginResponse)
 
     const result = await service.login({
@@ -29,7 +31,8 @@ describe('AuthService', () => {
       password: '123456',
     })
     expect(result.token).toBe(mockLoginResponse.data.token)
-    expect(result.user.name).toBe('Leonardo')
+    expect(result.email).toBe('leo@test.com')
+    expect(result.function).toBe('ADMIN')
   })
 
   it('throws when API returns an error', async () => {

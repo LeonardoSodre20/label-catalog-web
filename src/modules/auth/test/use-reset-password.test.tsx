@@ -1,17 +1,9 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { renderHook, waitFor } from '@testing-library/react'
-import { useLogin } from '../mutations/use-login'
+import { useResetPassword } from '../mutations/use-reset-password'
 import { AuthService } from '../services/auth.service'
-import type { LoginResponse } from '../types/auth-types'
 
 vi.mock('../services/auth.service')
-
-const mockLoginResponse: LoginResponse = {
-  token: 'eyJhbGciOiJIUzI1NiJ9',
-  type: 'Bearer',
-  email: 'leo@test.com',
-  function: 'ADMIN',
-}
 
 function createWrapper() {
   const queryClient = new QueryClient({
@@ -27,39 +19,50 @@ function createWrapper() {
   }
 }
 
-describe('useLogin', () => {
+describe('useResetPassword', () => {
   beforeEach(() => {
     vi.clearAllMocks()
   })
 
-  it('calls AuthService.login and returns data on success', async () => {
-    vi.mocked(AuthService.prototype.login).mockResolvedValue(mockLoginResponse)
+  it('calls AuthService.resetPassword on success', async () => {
+    vi.mocked(AuthService.prototype.resetPassword).mockResolvedValue()
 
-    const { result } = renderHook(() => useLogin(), {
+    const { result } = renderHook(() => useResetPassword(), {
       wrapper: createWrapper(),
     })
 
-    result.current.mutate({ email: 'leo@test.com', password: '123456' })
+    result.current.mutate({
+      email: 'leo@test.com',
+      token: '123456',
+      password: 'NewPass123!',
+      confirmPassword: 'NewPass123!',
+    })
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
 
-    expect(result.current.data).toEqual(mockLoginResponse)
-    expect(AuthService.prototype.login).toHaveBeenCalledWith({
+    expect(AuthService.prototype.resetPassword).toHaveBeenCalledWith({
       email: 'leo@test.com',
-      password: '123456',
+      token: '123456',
+      password: 'NewPass123!',
+      confirmPassword: 'NewPass123!',
     })
   })
 
   it('handles error state', async () => {
-    vi.mocked(AuthService.prototype.login).mockRejectedValue(
-      new Error('Invalid credentials'),
+    vi.mocked(AuthService.prototype.resetPassword).mockRejectedValue(
+      new Error('Token is invalid or expired'),
     )
 
-    const { result } = renderHook(() => useLogin(), {
+    const { result } = renderHook(() => useResetPassword(), {
       wrapper: createWrapper(),
     })
 
-    result.current.mutate({ email: 'leo@test.com', password: '123456' })
+    result.current.mutate({
+      email: 'leo@test.com',
+      token: '000000',
+      password: 'NewPass123!',
+      confirmPassword: 'NewPass123!',
+    })
 
     await waitFor(() => expect(result.current.isError).toBe(true))
 
@@ -67,7 +70,7 @@ describe('useLogin', () => {
   })
 
   it('starts in idle state before mutation is called', () => {
-    const { result } = renderHook(() => useLogin(), {
+    const { result } = renderHook(() => useResetPassword(), {
       wrapper: createWrapper(),
     })
 

@@ -3,9 +3,25 @@ import userEvent from '@testing-library/user-event'
 import { LoginForm } from '../components/login-form'
 
 const mockNavigate = vi.fn()
+const mockMutate = vi.fn()
+const mockSetSession = vi.fn()
 
 vi.mock('@tanstack/react-router', () => ({
   useRouter: () => ({ navigate: mockNavigate }),
+}))
+
+vi.mock('../mutations/use-login', () => ({
+  useLogin: () => ({
+    mutate: mockMutate,
+    isPending: false,
+    isError: false,
+    error: null,
+  }),
+}))
+
+vi.mock('@/shared/stores/auth-store', () => ({
+  useAuthStore: (selector: (state: unknown) => unknown) =>
+    selector({ setSession: mockSetSession }),
 }))
 
 describe('LoginForm', () => {
@@ -73,5 +89,24 @@ describe('LoginForm', () => {
     await user.click(forgotLink)
 
     expect(mockNavigate).toHaveBeenCalledWith({ to: '/reset-password' })
+  })
+
+  it('submits form programmatically triggers mutate', async () => {
+    const user = userEvent.setup()
+    render(<LoginForm />)
+
+    await user.type(screen.getByLabelText(/e-?mail/i), 'leo@test.com')
+    await user.type(screen.getByLabelText('Senha'), '123456')
+    await user.tab()
+
+    const submitBtn = screen.getByRole('button', { name: /entrar/i })
+    expect(submitBtn).toBeEnabled()
+
+    await user.click(submitBtn)
+
+    expect(mockMutate).toHaveBeenCalledWith(
+      { email: 'leo@test.com', password: '123456' },
+      expect.any(Object),
+    )
   })
 })
