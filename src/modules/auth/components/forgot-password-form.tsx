@@ -1,6 +1,7 @@
 import { Button } from '@/shared/components/ui/button'
 import { Input } from '@/shared/components/ui/input'
 import { Label } from '@/shared/components/ui/label'
+import axios from 'axios'
 import { useState } from 'react'
 import { useForgotPasswordForm } from '../hooks/use-forgot-password-form'
 import { useForgotPassword } from '../mutations/use-forgot-password'
@@ -8,6 +9,15 @@ import { useForgotPassword } from '../mutations/use-forgot-password'
 interface ForgotPasswordFormProps {
   onSuccess: (email: string) => void
   onBackToLogin: () => void
+}
+
+function getErrorMessage(error: unknown): string {
+  if (axios.isAxiosError(error)) {
+    const data = error.response?.data as { error?: string } | undefined
+    if (data?.error) return data.error
+    if (error.response?.status === 404) return 'E-mail não encontrado'
+  }
+  return 'Erro ao enviar código. Tente novamente.'
 }
 
 export function ForgotPasswordForm({
@@ -76,8 +86,18 @@ export function ForgotPasswordForm({
           )}
         </div>
 
-        <Button type='submit' className='w-full cursor-pointer'>
-          Enviar código
+        {forgotPasswordMutation.isError && (
+          <div className='rounded-md bg-destructive/10 p-3 text-sm text-destructive'>
+            {getErrorMessage(forgotPasswordMutation.error)}
+          </div>
+        )}
+
+        <Button
+          type='submit'
+          className='w-full cursor-pointer'
+          disabled={forgotPasswordMutation.isPending}
+        >
+          {forgotPasswordMutation.isPending ? 'Enviando...' : 'Enviar código'}
         </Button>
       </form>
 

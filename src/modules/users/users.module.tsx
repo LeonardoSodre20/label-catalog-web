@@ -1,6 +1,16 @@
-import { UsersIcon } from 'lucide-react'
+import { useAuthStore } from '@/shared/stores/auth-store'
+import { useRouter } from '@tanstack/react-router'
+import { LogOut, UsersIcon } from 'lucide-react'
 
 export function UsersModule() {
+  const router = useRouter()
+  const email = useAuthStore((state) => state.email)
+
+  const handleLogout = () => {
+    useAuthStore.getState().clearSession()
+    router.navigate({ to: '/' })
+  }
+
   return (
     <div className='flex min-h-dvh'>
       <aside className='hidden w-64 flex-col border-r border-border bg-sidebar p-6 lg:flex'>
@@ -21,6 +31,22 @@ export function UsersModule() {
             Usuários
           </a>
         </nav>
+
+        <div className='mt-auto space-y-2'>
+          {email && (
+            <p className='truncate px-3 text-xs text-muted-foreground'>
+              {email}
+            </p>
+          )}
+          <button
+            type='button'
+            onClick={handleLogout}
+            className='flex w-full cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-primary-foreground/10 hover:text-primary-foreground'
+          >
+            <LogOut className='h-4 w-4' />
+            Sair
+          </button>
+        </div>
       </aside>
 
       <main className='flex flex-1 flex-col bg-background'>

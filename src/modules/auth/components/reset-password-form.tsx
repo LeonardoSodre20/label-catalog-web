@@ -1,6 +1,7 @@
 import { Button } from '@/shared/components/ui/button'
 import { Input } from '@/shared/components/ui/input'
 import { Label } from '@/shared/components/ui/label'
+import axios from 'axios'
 import { useState } from 'react'
 import { useResetPasswordForm } from '../hooks/use-reset-password-form'
 import { useResetPassword } from '../mutations/use-reset-password'
@@ -10,6 +11,14 @@ interface ResetPasswordFormProps {
   token: string
   onSuccess: () => void
   onBack: () => void
+}
+
+function getErrorMessage(error: unknown): string {
+  if (axios.isAxiosError(error)) {
+    const data = error.response?.data as { error?: string } | undefined
+    if (data?.error) return data.error
+  }
+  return 'Erro ao redefinir senha. Tente novamente.'
 }
 
 export function ResetPasswordForm({
@@ -29,7 +38,7 @@ export function ResetPasswordForm({
 
   const onSubmit = (data: {
     password: string
-    passwordConfirmation: string
+    confirmPassword: string
   }) => {
     resetPasswordMutation.mutate(
       { email, token, ...data },
@@ -114,17 +123,17 @@ export function ResetPasswordForm({
         </div>
 
         <div className='space-y-2'>
-          <Label htmlFor='passwordConfirmation'>Confirmar senha</Label>
+          <Label htmlFor='confirmPassword'>Confirmar senha</Label>
           <div className='relative'>
             <Input
-              id='passwordConfirmation'
+              id='confirmPassword'
               type={showConfirmation ? 'text' : 'password'}
               placeholder='••••••••'
               autoComplete='new-password'
               maxLength={128}
               className='pr-10'
-              aria-invalid={!!errors.passwordConfirmation}
-              {...register('passwordConfirmation')}
+              aria-invalid={!!errors.confirmPassword}
+              {...register('confirmPassword')}
             />
             <button
               type='button'
@@ -172,15 +181,27 @@ export function ResetPasswordForm({
               )}
             </button>
           </div>
-          {errors.passwordConfirmation && (
+          {errors.confirmPassword && (
             <span className='text-sm text-destructive'>
-              {errors.passwordConfirmation.message}
+              {errors.confirmPassword.message}
             </span>
           )}
         </div>
 
-        <Button type='submit' className='w-full cursor-pointer'>
-          Redefinir senha
+        {resetPasswordMutation.isError && (
+          <div className='rounded-md bg-destructive/10 p-3 text-sm text-destructive'>
+            {getErrorMessage(resetPasswordMutation.error)}
+          </div>
+        )}
+
+        <Button
+          type='submit'
+          className='w-full cursor-pointer'
+          disabled={resetPasswordMutation.isPending}
+        >
+          {resetPasswordMutation.isPending
+            ? 'Redefinindo...'
+            : 'Redefinir senha'}
         </Button>
       </form>
 

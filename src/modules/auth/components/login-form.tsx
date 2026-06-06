@@ -1,18 +1,46 @@
 import { Button } from '@/shared/components/ui/button'
 import { Input } from '@/shared/components/ui/input'
 import { Label } from '@/shared/components/ui/label'
+import { useAuthStore } from '@/shared/stores/auth-store'
 import { useRouter } from '@tanstack/react-router'
+import axios from 'axios'
 import { useState } from 'react'
 import { useLoginForm } from '../hooks/use-login-form'
+import { useLogin } from '../mutations/use-login'
+
+function getErrorMessage(error: unknown): string {
+  if (axios.isAxiosError(error)) {
+    const data = error.response?.data as { error?: string } | undefined
+    if (data?.error) return data.error
+    if (error.response?.status === 401) return 'E-mail ou senha inválidos'
+    if (error.response?.status === 400) return 'Dados inválidos'
+  }
+  return 'Erro ao fazer login. Tente novamente.'
+}
 
 export function LoginForm() {
   const router = useRouter()
   const [showPassword, setShowPassword] = useState(false)
+  const loginMutation = useLogin()
+  const setSession = useAuthStore((state) => state.setSession)
   const {
     register,
     handleSubmit,
     formState: { errors, isValid },
   } = useLoginForm()
+
+  const onSubmit = (data: { email: string; password: string }) => {
+    loginMutation.mutate(data, {
+      onSuccess: (response) => {
+        setSession({
+          token: response.token,
+          email: response.email,
+          function: response.function,
+        })
+        router.navigate({ to: '/users' })
+      },
+    })
+  }
 
   return (
     <div className='space-y-6'>
@@ -23,7 +51,7 @@ export function LoginForm() {
         </p>
       </div>
 
-      <form className='space-y-4' onSubmit={handleSubmit(() => {})} noValidate>
+      <form className='space-y-4' onSubmit={handleSubmit(onSubmit)} noValidate>
         <div className='space-y-2'>
           <Label htmlFor='email'>E-mail</Label>
           <Input
@@ -109,12 +137,18 @@ export function LoginForm() {
           )}
         </div>
 
+        {loginMutation.isError && (
+          <div className='rounded-md bg-destructive/10 p-3 text-sm text-destructive'>
+            {getErrorMessage(loginMutation.error)}
+          </div>
+        )}
+
         <Button
           type='submit'
           className='w-full cursor-pointer'
-          disabled={!isValid}
+          disabled={!isValid || loginMutation.isPending}
         >
-          Entrar
+          {loginMutation.isPending ? 'Entrando...' : 'Entrar'}
         </Button>
       </form>
 
