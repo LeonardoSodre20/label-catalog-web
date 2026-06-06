@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion'
 import type { ReactNode } from 'react'
 
 interface LoginLayoutProps {
@@ -35,7 +36,14 @@ export function LoginLayout({ children }: LoginLayoutProps) {
       </div>
 
       <div className='flex flex-1 items-center justify-center bg-background p-8'>
-        <div className='w-full max-w-sm'>{children}</div>
+        <motion.div
+          className='w-full max-w-sm'
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.2, ease: [0.25, 1, 0.5, 1] as const }}
+        >
+          {children}
+        </motion.div>
       </div>
     </div>
   )

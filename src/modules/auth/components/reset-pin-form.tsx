@@ -2,6 +2,8 @@ import { Button } from '@/shared/components/ui/button'
 import { Label } from '@/shared/components/ui/label'
 import { PinInput } from '@/shared/components/ui/pin-input'
 import axios from 'axios'
+import { Loader2 } from 'lucide-react'
+import { toast } from 'sonner'
 import { useResendCooldown } from '../hooks/use-resend-cooldown'
 import { useResetPinForm } from '../hooks/use-reset-pin-form'
 import { useForgotPassword } from '../mutations/use-forgot-password'
@@ -50,6 +52,7 @@ export function ResetPinForm({ email, onSuccess, onBack }: ResetPinFormProps) {
       { email },
       {
         onSuccess: () => {
+          toast.success('Novo código enviado para seu e-mail')
           startCooldown()
         },
       },
@@ -96,9 +99,14 @@ export function ResetPinForm({ email, onSuccess, onBack }: ResetPinFormProps) {
           className='w-full cursor-pointer'
           disabled={verifyTokenMutation.isPending}
         >
-          {verifyTokenMutation.isPending
-            ? 'Verificando...'
-            : 'Verificar código'}
+          {verifyTokenMutation.isPending ? (
+            <>
+              <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+              Verificando...
+            </>
+          ) : (
+            'Verificar código'
+          )}
         </Button>
       </form>
 

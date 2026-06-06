@@ -4,7 +4,9 @@ import { Label } from '@/shared/components/ui/label'
 import { useAuthStore } from '@/shared/stores/auth-store'
 import { useRouter } from '@tanstack/react-router'
 import axios from 'axios'
+import { Loader2 } from 'lucide-react'
 import { useState } from 'react'
+import { toast } from 'sonner'
 import { useLoginForm } from '../hooks/use-login-form'
 import { useLogin } from '../mutations/use-login'
 
@@ -37,6 +39,7 @@ export function LoginForm() {
           email: response.email,
           function: response.function,
         })
+        toast.success('Login realizado com sucesso')
         router.navigate({ to: '/users' })
       },
     })
@@ -89,7 +92,6 @@ export function LoginForm() {
               onClick={() => setShowPassword(!showPassword)}
               className='absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer p-1 text-muted-foreground hover:text-foreground'
               aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
-              tabIndex={-1}
             >
               {showPassword ? (
                 <svg
@@ -148,7 +150,14 @@ export function LoginForm() {
           className='w-full cursor-pointer'
           disabled={!isValid || loginMutation.isPending}
         >
-          {loginMutation.isPending ? 'Entrando...' : 'Entrar'}
+          {loginMutation.isPending ? (
+            <>
+              <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+              Entrando...
+            </>
+          ) : (
+            'Entrar'
+          )}
         </Button>
       </form>
 

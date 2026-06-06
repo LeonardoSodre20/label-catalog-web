@@ -2,7 +2,9 @@ import { Button } from '@/shared/components/ui/button'
 import { Input } from '@/shared/components/ui/input'
 import { Label } from '@/shared/components/ui/label'
 import axios from 'axios'
+import { Loader2 } from 'lucide-react'
 import { useState } from 'react'
+import { toast } from 'sonner'
 import { useResetPasswordForm } from '../hooks/use-reset-password-form'
 import { useResetPassword } from '../mutations/use-reset-password'
 
@@ -42,7 +44,12 @@ export function ResetPasswordForm({
   }) => {
     resetPasswordMutation.mutate(
       { email, token, ...data },
-      { onSuccess: () => onSuccess() },
+      {
+        onSuccess: () => {
+          toast.success('Senha redefinida com sucesso')
+          onSuccess()
+        },
+      },
     )
   }
 
@@ -74,7 +81,6 @@ export function ResetPasswordForm({
               onClick={() => setShowPassword(!showPassword)}
               className='absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer p-1 text-muted-foreground hover:text-foreground'
               aria-label={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
-              tabIndex={-1}
             >
               {showPassword ? (
                 <svg
@@ -140,7 +146,6 @@ export function ResetPasswordForm({
               onClick={() => setShowConfirmation(!showConfirmation)}
               className='absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer p-1 text-muted-foreground hover:text-foreground'
               aria-label={showConfirmation ? 'Ocultar senha' : 'Mostrar senha'}
-              tabIndex={-1}
             >
               {showConfirmation ? (
                 <svg
@@ -199,9 +204,14 @@ export function ResetPasswordForm({
           className='w-full cursor-pointer'
           disabled={resetPasswordMutation.isPending}
         >
-          {resetPasswordMutation.isPending
-            ? 'Redefinindo...'
-            : 'Redefinir senha'}
+          {resetPasswordMutation.isPending ? (
+            <>
+              <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+              Redefinindo...
+            </>
+          ) : (
+            'Redefinir senha'
+          )}
         </Button>
       </form>
 

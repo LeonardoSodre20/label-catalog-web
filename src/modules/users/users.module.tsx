@@ -1,13 +1,18 @@
 import { useAuthStore } from '@/shared/stores/auth-store'
 import { useRouter } from '@tanstack/react-router'
 import { LogOut, UsersIcon } from 'lucide-react'
+import { useState } from 'react'
+import { toast } from 'sonner'
 
 export function UsersModule() {
   const router = useRouter()
   const email = useAuthStore((state) => state.email)
+  const [loggingOut, setLoggingOut] = useState(false)
 
   const handleLogout = () => {
+    setLoggingOut(true)
     useAuthStore.getState().clearSession()
+    toast.success('Sessão encerrada')
     router.navigate({ to: '/' })
   }
 
@@ -41,10 +46,11 @@ export function UsersModule() {
           <button
             type='button'
             onClick={handleLogout}
-            className='flex w-full cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-primary-foreground/10 hover:text-primary-foreground'
+            disabled={loggingOut}
+            className='flex w-full cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-primary-foreground/10 hover:text-primary-foreground disabled:pointer-events-none disabled:opacity-50'
           >
             <LogOut className='h-4 w-4' />
-            Sair
+            {loggingOut ? 'Saindo...' : 'Sair'}
           </button>
         </div>
       </aside>

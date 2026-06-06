@@ -2,7 +2,9 @@ import { Button } from '@/shared/components/ui/button'
 import { Input } from '@/shared/components/ui/input'
 import { Label } from '@/shared/components/ui/label'
 import axios from 'axios'
+import { Loader2 } from 'lucide-react'
 import { useState } from 'react'
+import { toast } from 'sonner'
 import { useForgotPasswordForm } from '../hooks/use-forgot-password-form'
 import { useForgotPassword } from '../mutations/use-forgot-password'
 
@@ -35,6 +37,7 @@ export function ForgotPasswordForm({
   const onSubmit = (data: { email: string }) => {
     forgotPasswordMutation.mutate(data, {
       onSuccess: () => {
+        toast.success('Código enviado para seu e-mail')
         setSubmitted(true)
         onSuccess(data.email)
       },
@@ -49,10 +52,22 @@ export function ForgotPasswordForm({
             E-mail enviado
           </h2>
           <p className='text-sm text-muted-foreground'>
-            Enviamos um código de verificação para seu e-mail. Siga as
-            instruções para redefinir sua senha.
+            Enviamos um código de verificação para{' '}
+            <span className='text-foreground'>
+              {forgotPasswordMutation.variables?.email}
+            </span>
+            . Siga as instruções para redefinir sua senha.
           </p>
         </div>
+        <Button
+          type='button'
+          className='w-full cursor-pointer'
+          onClick={() =>
+            onSuccess(forgotPasswordMutation.variables?.email ?? '')
+          }
+        >
+          Verificar código
+        </Button>
       </div>
     )
   }
@@ -97,14 +112,21 @@ export function ForgotPasswordForm({
           className='w-full cursor-pointer'
           disabled={forgotPasswordMutation.isPending}
         >
-          {forgotPasswordMutation.isPending ? 'Enviando...' : 'Enviar código'}
+          {forgotPasswordMutation.isPending ? (
+            <>
+              <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+              Enviando...
+            </>
+          ) : (
+            'Enviar código'
+          )}
         </Button>
       </form>
 
       <button
         type='button'
         onClick={onBackToLogin}
-        className='w-full cursor-pointer text-center text-sm font-medium text-primary underline-offset-4 hover:underline'
+        className='block w-full cursor-pointer text-center text-sm font-medium text-primary underline-offset-4 hover:underline'
       >
         Voltar ao login
       </button>
