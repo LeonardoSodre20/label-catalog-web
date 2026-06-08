@@ -1,15 +1,13 @@
-import { useInitials } from '@/shared/hooks/use-initials'
-import { useAuthStore } from '@/shared/stores/auth-store'
-import { useRouter } from '@tanstack/react-router'
-import { LogOut, Menu, Tag } from 'lucide-react'
+import { Link, useRouter } from '@tanstack/react-router'
+import { LogOut, Tag } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
-interface DashboardHeaderProps {
-  onMenuClick: () => void
-}
+import { SidebarTrigger } from '@/shared/components/ui/sidebar'
+import { useInitials } from '@/shared/hooks/use-initials'
+import { useAuthStore } from '@/shared/stores/auth-store'
 
-export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
+export function DashboardHeader() {
   const router = useRouter()
   const email = useAuthStore((state) => state.email)
   const initials = useInitials(email)
@@ -24,26 +22,22 @@ export function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
 
   return (
     <header className='flex h-14 items-center border-b border-border bg-background px-4'>
-      <button
-        type='button'
-        onClick={onMenuClick}
-        className='mr-3 flex cursor-pointer items-center justify-center rounded-md p-1 text-muted-foreground hover:text-foreground lg:hidden'
-        aria-label='Abrir menu'
-      >
-        <Menu className='h-5 w-5' />
-      </button>
+      <SidebarTrigger className='mr-3' />
 
-      <div className='flex items-center gap-2 lg:hidden'>
+      <Link to='/dashboard/users' className='flex items-center gap-2 lg:hidden'>
         <div className='flex h-8 w-8 items-center justify-center rounded-lg bg-primary'>
           <Tag className='h-4 w-4 text-primary-foreground' />
         </div>
         <span className='text-sm font-semibold text-foreground'>
           LabelCatalog
         </span>
-      </div>
+      </Link>
 
       <div className='ml-auto flex items-center gap-3'>
-        <div className='flex h-8 w-8 items-center justify-center rounded-full bg-primary text-xs font-medium text-primary-foreground'>
+        <div
+          className='flex h-8 w-8 items-center justify-center rounded-full bg-primary text-xs font-medium text-primary-foreground'
+          aria-label={email ?? undefined}
+        >
           {initials}
         </div>
         <div className='hidden flex-col sm:flex'>
