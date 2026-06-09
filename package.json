@@ -1,5 +1,6 @@
 {
   "name": "label-catalog-web",
+  "description": "Sistema corporativo para centralização de dados operacionais — etiquetas, usuários e análise de custos",
   "private": true,
   "version": "0.0.0",
   "type": "module",
