@@ -1,5 +1,5 @@
-import { Link, useRouter } from '@tanstack/react-router'
-import { BookOpen, Clock, PlusCircle, Tag, Users } from 'lucide-react'
+import { Link, useLocation } from '@tanstack/react-router'
+import { BookOpen, Clock, Layers, Tag, Tags, Users } from 'lucide-react'
 
 import {
   Sidebar,
@@ -26,22 +26,27 @@ const navItems = [
     disabled: true,
   },
   {
+    label: 'Etiquetas',
+    icon: Tags,
+    path: '/dashboard/labels',
+    disabled: false,
+  },
+  {
     label: 'Usuários',
     icon: Users,
     path: '/dashboard/users',
     disabled: false,
   },
   {
-    label: '+ Nova Etiqueta',
-    icon: PlusCircle,
-    path: '/dashboard/labels/new',
-    disabled: true,
+    label: 'Tipos de etiqueta',
+    icon: Layers,
+    path: '/dashboard/types-of-labels',
+    disabled: false,
   },
 ]
 
 export function AppSidebar() {
-  const router = useRouter()
-  const currentPath = router.state.location.pathname
+  const { pathname: currentPath } = useLocation()
   const { state } = useSidebar()
   const collapsed = state === 'collapsed'
 
