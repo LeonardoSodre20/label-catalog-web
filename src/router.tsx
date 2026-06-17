@@ -9,6 +9,9 @@ import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 
 import { AuthModule } from '@/modules/auth/auth.module'
 import { ResetPasswordModule } from '@/modules/auth/reset-password.module'
+import { LabelsCreateModule } from '@/modules/labels/labels-create.module'
+import { LabelsModule } from '@/modules/labels/labels.module'
+import { TypesOfLabelsModule } from '@/modules/types-of-labels/types-of-labels.module'
 import { UsersModule } from '@/modules/users/users.module'
 import { DashboardLayout } from '@/shared/components/dashboard-layout'
 import { AppProvider } from '@/shared/providers/app-provider'
@@ -53,10 +56,33 @@ const usersRoute = createRoute({
   component: UsersModule,
 })
 
+const labelsRoute = createRoute({
+  getParentRoute: () => dashboardRoute,
+  path: '/labels',
+  component: LabelsModule,
+})
+
+const labelsCreateRoute = createRoute({
+  getParentRoute: () => dashboardRoute,
+  path: '/labels/new',
+  component: LabelsCreateModule,
+})
+
+const typesOfLabelsRoute = createRoute({
+  getParentRoute: () => dashboardRoute,
+  path: '/types-of-labels',
+  component: TypesOfLabelsModule,
+})
+
 const routeTree = rootRoute.addChildren([
   authRoute,
   resetPasswordRoute,
-  dashboardRoute.addChildren([usersRoute]),
+  dashboardRoute.addChildren([
+    usersRoute,
+    labelsRoute,
+    labelsCreateRoute,
+    typesOfLabelsRoute,
+  ]),
 ])
 
 const router = createRouter({ routeTree })
